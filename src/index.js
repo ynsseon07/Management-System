@@ -10,6 +10,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+// id가 root인 위치에 App.js의 내용을 렌더링하라는 명령
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
