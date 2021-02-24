@@ -5,7 +5,9 @@ const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
+// 기본 express 폼
 
+// REST API 생성하는 부분
 app.get('/api/customers', (req, res) => {
     res.send([
         {
@@ -35,4 +37,5 @@ app.get('/api/customers', (req, res) => {
     ]);
 })
 
+// 기본 express 폼
 app.listen(port, () => console.log(`Listening on port ${port}`));
