@@ -34,13 +34,16 @@ class App extends Component {
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);    // progress 함수가 20초 간격으로 수행되도록 설정
     this.callApi()
-    .then(res => this.setState({customers: res}))
+    .then(res => {
+      this.setState({customers: res});
+    })
     .catch(err => console.log(err));
   }
 
   callApi = async () => {
-    const response = await fetch('/api/customers');
-    const body = await response.json();
+    const response = await fetch('/api/customers');       // 해당 주소에 접속
+    const body = await response.json();                   // 서버에서 수행된 결과값을 json 형태로 받아옴
+    console.log(body);
     return body;
   }
 
@@ -53,7 +56,6 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <Paper className={classes.root}>
-
         <h2>Management System</h2>
         <Table className={classes.table}>
           <TableHead>
@@ -66,19 +68,19 @@ class App extends Component {
               <TableCell>직업</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            
               {/* 반복문 처리하기 위해 map 사용 */}
               {this.state.customers ? this.state.customers.map(c => {
                 return (
                   <Customer
-                    key={c.id}  // 구분할 수 있는 고유값
-                    id={c.id}
-                    img={c.image}
-                    name={c.name}
-                    birth={c.birthday}
-                    gender={c.gender}
-                    job={c.job}
+                    key={c.ID}  // 구분할 수 있는 고유값
+                    id={c.ID}
+                    img={c.IMAGE}
+                    name={c.NAME}
+                    birth={c.BIRTHDAY}
+                    gender={c.GENDER}
+                    job={c.JOB}
                   />
                 );
               }) : 
@@ -88,10 +90,8 @@ class App extends Component {
                 </TableCell>
               </TableRow>
               }
-            
           </TableBody>
         </Table>
-        
       </Paper>
     );
   }
