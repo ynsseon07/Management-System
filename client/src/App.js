@@ -27,17 +27,29 @@ const styles = theme => ({
 
 class App extends Component {
 
-  state = {
-    customers: "",
-    completed: 0
+  constructor(props) {
+    super(props);
+    this.state = {
+      customers: '',
+      completed: 0
+    }
   }
+
+  stateRefresh = () => {
+    this.setState({
+      customers: '',
+      completed: 0
+    });
+    this.callApi()
+    .then(res => this.setState({customers: res}))
+    .catch(err => console.log(err));
+  }
+  
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);    // progress 함수가 20초 간격으로 수행되도록 설정
     this.callApi()
-    .then(res => {
-      this.setState({customers: res});
-    })
+    .then(res => this.setState({customers: res}))
     .catch(err => console.log(err));
   }
 
@@ -45,7 +57,7 @@ class App extends Component {
     const response = await fetch('/api/customers');       // 해당 주소에 접속
     const body = await response.json();                   // 서버에서 수행된 결과값을 json 형태로 받아옴
     console.log(body);
-    return body;
+    return body;                                          // 결과값 반환 (body가 상위 코드의 res로 반환된다)
   }
 
   progress = () => {
@@ -96,7 +108,7 @@ class App extends Component {
         </Table>
       </Paper>
       
-      <CustomerAdd />
+      <CustomerAdd stateRefresh={this.stateRefresh}/>
       </div>
     );
   }

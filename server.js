@@ -15,6 +15,7 @@ const dbConfig = require('./dbConfig.js');
 oracledb.autoCommit = true;
 
 // REST API 생성하는 부분
+// 고객 리스트를 조회 ( SELECT )
 app.get('/api/customers', (req, res) => {
 
     // oracle DB와 연결
@@ -41,7 +42,7 @@ app.get('/api/customers', (req, res) => {
             console.log('success');
 
             // /api/customers 입력시 App.js에 데이터 전송
-            res.send(result.rows)
+            res.send(result.rows);
             doRelease(connection, result.rows);
         });
     });
@@ -55,6 +56,61 @@ app.get('/api/customers', (req, res) => {
         });
     }
 });
+
+
+// 고객 정보 추가 ( INSERT )
+// multer 라이브러리로 인해 업로드되는 파일의 이름이 중복되지 않게 랜덤으로 생성되어 저장
+const multer = require('multer');
+const upload = multer({dest: './upload'});
+
+// 이미지 파일 업로드
+app.use('/image', express.static('./upload'));
+
+app.post('/api/customers', upload.single('image'), (req,res) => {
+    let query = 'insert into customers values (seq.nextval, :image, :name, :birthday, :gender, :job)';
+    let image = '/image/' + req.file.filename;
+    let name = req.body.name;
+    let birthday = req.body.birthday;
+    let gender = req.body.gender;
+    let job = req.body.job;
+    let params = [image, name, birthday, gender, job];
+
+    // oracle DB와 연결
+    oracledb.getConnection({
+        user: dbConfig.user,
+        password: dbConfig.password,
+        connectString: dbConfig.connectString
+    },
+    function(err, connection) {
+        if(err) {
+            console.error(err.message);
+            return;
+        }
+
+        connection.execute(query, params, (err, result) => {
+            if(err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+            }
+            console.log('success');
+
+            res.send(result.rows);
+            doRelease(connection, result.rows);
+        });
+    });
+
+    // connection 해제
+    function doRelease(connection, rowList) {
+        connection.release((err) => {
+            if(err) {
+                console.error(err.message);
+            }
+        });
+    }
+})
+
+
 
 // 기본 express 폼
 app.listen(port, () => console.log(`Listening on port ${port}`));

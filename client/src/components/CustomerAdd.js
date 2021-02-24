@@ -18,9 +18,18 @@ class CustomerAdd extends React.Component {
     handleFormSubmit = (e) => {
         e.preventDefault();
         this.addCustomer()
-        .then((res) => {
-            console.log(res.data);
-        })
+            .then((res) => {
+                console.log(res.data);
+                this.props.stateRefresh();
+            });
+        this.setState({
+            file: null,
+            userName: '',
+            birthday: '',
+            gender: '',
+            job: '',
+            fileName: ''
+        });
     }
 
     // 고객 추가 정보를 서버로 보냄
@@ -37,7 +46,7 @@ class CustomerAdd extends React.Component {
                 'content-type' : 'multipart/form-data'
             }
         }
-        return post(url, formData, config);
+        return post(url, formData, config);         // server.js로 데이터 전송
     }
 
     handleFileChange = (e) => {
