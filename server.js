@@ -30,7 +30,7 @@ app.get('/api/customers', (req, res) => {
             return;
         }
 
-        let query = 'select * from customers';
+        let query = 'select * from customers where isDeleted = 0';
 
         // connection이 성공할시에 query문을 수행하여 result에 JSON 객체를 받아옴
         connection.execute(query, {}, {outFormat:oracledb.OBJECT}, (err, result) => {
@@ -67,7 +67,7 @@ const upload = multer({dest: './upload'});
 app.use('/image', express.static('./upload'));
 
 app.post('/api/customers', upload.single('image'), (req,res) => {
-    let query = 'insert into customers values (seq.nextval, :image, :name, :birthday, :gender, :job)';
+    let query = 'insert into customers values (seq.nextval, :image, :name, :birthday, :gender, :job, sysdate, 0)';
     let image = '/image/' + req.file.filename;
     let name = req.body.name;
     let birthday = req.body.birthday;
@@ -111,6 +111,45 @@ app.post('/api/customers', upload.single('image'), (req,res) => {
 })
 
 
+// 고객 삭제 ( DELETE )
+app.delete('/api/customers/:id', (req, res) => {
+    let query = 'update customers set isDeleted = 1 where id = :id';
+    let params = [req.params.id];
+
+    // oracle DB와 연결
+    oracledb.getConnection({
+        user: dbConfig.user,
+        password: dbConfig.password,
+        connectString: dbConfig.connectString
+    },
+    function(err, connection) {
+        if(err) {
+            console.error(err.message);
+            return;
+        }
+
+        connection.execute(query, params, (err, result) => {
+            if(err) {
+                console.error(err.message);
+                doRelease(connection);
+                return;
+            }
+            console.log('success');
+
+            res.send(result.rows);
+            doRelease(connection, result.rows);
+        });
+    });
+
+    // connection 해제
+    function doRelease(connection, rowList) {
+        connection.release((err) => {
+            if(err) {
+                console.error(err.message);
+            }
+        });
+    }
+})
 
 // 기본 express 폼
 app.listen(port, () => console.log(`Listening on port ${port}`));

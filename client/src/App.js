@@ -35,6 +35,7 @@ class App extends Component {
     }
   }
 
+  // 고객리스트 조회목록 부분만을 새로고침
   stateRefresh = () => {
     this.setState({
       customers: '',
@@ -80,6 +81,7 @@ class App extends Component {
               <TableCell>생년월일</TableCell>
               <TableCell>성별</TableCell>
               <TableCell>직업</TableCell>
+              <TableCell>설정</TableCell>
             </TableRow>
           </TableHead>
 
@@ -88,6 +90,7 @@ class App extends Component {
               {this.state.customers ? this.state.customers.map(c => {
                 return (
                   <Customer
+                    stateRefresh={this.stateRefresh}
                     key={c.ID}  // 구분할 수 있는 고유값
                     id={c.ID}
                     img={c.IMAGE}
