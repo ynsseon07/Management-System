@@ -15,7 +15,7 @@ const dbConfig = require('./dbConfig.js');
 oracledb.autoCommit = true;
 
 // REST API 생성하는 부분
-// 고객 리스트를 조회 ( SELECT )
+// *** 고객 리스트를 조회 ( SELECT ) *** //
 app.get('/api/customers', (req, res) => {
 
     // oracle DB와 연결
@@ -58,7 +58,7 @@ app.get('/api/customers', (req, res) => {
 });
 
 
-// 고객 정보 추가 ( INSERT )
+// *** 고객 정보 추가 ( INSERT ) *** //
 // multer 라이브러리로 인해 업로드되는 파일의 이름이 중복되지 않게 랜덤으로 생성되어 저장
 const multer = require('multer');
 const upload = multer({dest: './upload'});
@@ -111,7 +111,7 @@ app.post('/api/customers', upload.single('image'), (req,res) => {
 })
 
 
-// 고객 삭제 ( DELETE )
+// *** 고객 삭제 ( DELETE ) *** //
 app.delete('/api/customers/:id', (req, res) => {
     let query = 'update customers set isDeleted = 1 where id = :id';
     let params = [req.params.id];
