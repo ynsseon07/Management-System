@@ -5,6 +5,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+
 class CustomerDelete extends React.Component {
 
     constructor(props) {
@@ -42,7 +43,7 @@ class CustomerDelete extends React.Component {
                     삭제
                 </Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
-                    <DialogTitle onClose={this.handleClose}>
+                    <DialogTitle>
                         삭제 경고
                     </DialogTitle>
 
