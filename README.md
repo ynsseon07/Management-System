@@ -6,6 +6,7 @@
  
  
 2. Frontend 구현기능
+
  < 고객 데이터 CRUD >
   - 고객 데이터 추가, 삭제, 조회 가능
   - 고객 데이터 수정 구현 예정
@@ -23,6 +24,7 @@
   
   
 3. Backend 구현기능
+
  < Oracle DB와 express 서버 연동 >
   - dbConfig.js 파일을 통해 연결할 Oracle DB의 정보 저장
   - server.js 파일에서 express 서버를 사용해 Oracle DB와 연결
